@@ -1,4 +1,4 @@
-\chapter{Seznam.cz nowadays}
+\chapter{Seznam.cz nowadays}\label{chapter:seznam-nowadays}
 
 Seznam.cz is a big company with more than a thousand employees. More than one quarter of them are developers. Seznam.cz is divided into compartments and developers in each compartment are grouped to teams led by team leaders. Each team leader is responsible for applications allocated to his team. There are a couple of recommendations on workflow (e.g. unified coding style),  but as different teams have different demands and use cases for their applications, they also have a slightly different requirements on coding, building, testing, deployment etc.
 
@@ -15,4 +15,4 @@ This means developers have to turn anything they want to deploy to Debian packag
 
 The problem with this process arises when you want to use anything that does not have a Debian package. Developers than have to create one from an upstream source code (that is not a problem) and maintain it so that it doesn’t become obsolete after a while – and that is problem.
 
-The same situation can happen when developer wants to use a package from pip or an updated version of a package, that wasn’t updated in the official Debian repository. Adding such packages to the tree leads to a massive growth of the repository and a number of patched versions of software.
+The same situation can happen when developer wants to use a package from pip \cite{pip} or an updated version of a package, that wasn’t updated in the official Debian repository. Adding such packages to the tree leads to a massive growth of the repository and a number of patched versions of software.

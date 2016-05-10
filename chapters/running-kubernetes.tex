@@ -68,7 +68,10 @@ Starting Docker on Seznam.cz corporate machines brought a couple of problems tha
 
 Next issue that occured was a little bit tougher. In the Docker log I~found that no chain exists for an iptables rule which Docker wants to set. After consulting this problem with my team leader it proved to be caused by missing kernel modul \lstinline{xt_conntrack}. After adding this module to kernel Docker daemon finally started.
 
-In the Docker log I~also found a warning that cgroup memory is not allowed and that could possibly cause Kubernetes to not work properly with pod memory limitation. I~added \lstinline{GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"} to the \lstinline{/etc/default/grub} file and updated grub.
+In the Docker log I~also found a warning that cgroup memory is not allowed and that could possibly cause Kubernetes to not work properly with pod memory limitation. I~added the following line to the \lstinline{/etc/default/grub} file and updated grub.
+\begin{lstlisting}[language=bash]
+  GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"
+\end{lstlisting}
 
 With the Docker daemon running I~could start Kubernetes. As was shown in the \nameref{chapter:kubernetes-basic-concepts} chapter, the master node has to have API server, scheduler, proxy, kubelet, controller-manager and flannel running in a separate Docker daemon.
 

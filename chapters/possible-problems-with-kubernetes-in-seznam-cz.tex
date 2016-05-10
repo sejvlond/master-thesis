@@ -3,7 +3,7 @@
 This chapter summarizes what we have to focus on in Seznam.cz so we can build and maintain a Kubernetes cluster.
 
 \section{Docker registry}
-We have to build our own Docker registry a support for authentication so it is clear who and when pusher a certain Docker image and who is responsible for it in case of problems. Next we have to run Docker registries for developers both in testing and production environment. Images have to be mirrored from one to another registry. Production registry has to be in each data centre and it has to be a high availability service because if a whole data centre depends on a single server with Docker registry and the server fails (which it will if a whole data centre starts pulling images from it at once), it will be impossible to run new applications.
+We have to build our own Docker registry with a support for authentication so it is clear who and when pushed a certain Docker image and who is responsible for it in case of problems. Next we have to run Docker registries for developers both in testing and production environment. Images have to be mirrored from one to another registry. Production registry has to be in each data centre and it has to be a high availability service because if a whole data centre depends on a single server with Docker registry and the server fails (which it will if a whole data centre starts pulling images from it at once), it will be impossible to run new applications.
 
 \section{Secrets distribution}
 How to share passwords, certificates and other secrets which are different in development and test/production environment and which cannot be available outside of the containers that need them? Moreover, the production secrets are known only to administrators, so there has to be an easy way how to put secrets into containers without compiling them in images. Kubernetes has a technique for it and it calls it Kubernetes secrets. It has to be examined more closely and run in Seznam.cz conditions and environments.
@@ -29,5 +29,5 @@ When deploying a website, there are always at least 2 versions running at the mo
 At the moment we are deploying static content of websites first and it is installed on all machines. Static content is versioned in its path, so requests for it are always successful. Than one machine is removed from the pool (and waits until all currently opened connections are done) and it is replaced with a new version. This ensures that downloading static content never fails. However, this procedure will no longer be available in Kubernetes.
 
 \begin{flushleft}
-Those are the problems which I~have to find solution for.
+These are the problems which I~have to find solution for.
 \end{flushleft} 

@@ -1,8 +1,8 @@
 \chapter{What is Kubernetes?}
 
-Kubernetes is an open-source platform for automatic deployment, scaling and operation of application containers in a cluster. The main goal of Kubernetes is to manage the ecosystem of components in a custom public or private cloud. The emphasis is on high availability with scaling as an essential element.
+Kubernetes is an open source platform for automatic deployment, scaling and operation of application containers in a cluster \cite{kubernetesio}. The main goal of Kubernetes is to manage the ecosystem of components in a custom public or private cloud. The emphasis is on high availability with scaling as an essential element.
 
-Scaling needs to be taken into account during the development of any kind of a high availability application. The problem is when the application cannot fully use the performance of the physical server. Because of high availability, the application has to be ran on more machines, which means that the performance of the servers is wasted. The virtualization is the answer. There are many ways of virtualization: from entire operating systems (using VMware \cite{vmware} or VirtualBox \cite{virtualbox} to container based virtualization (such as widely used OpenVZ \cite{openvz}).
+Scaling needs to be taken into account during the development of any kind of a high availability application. The problem is when the application cannot fully use the performance of the physical server. Because of high availability, the application has to be ran on more machines, which means that the performance of the servers is wasted. The virtualization is the answer. There are many ways of virtualization: from entire operating systems (using VMware \cite{vmware} or VirtualBox \cite{virtualbox}) to container based virtualization (such as widely used OpenVZ \cite{openvz}).
 
 All those technologies allow to run more virtual applications on a single physical machine. It provides better load balance and server efficiency while preserving isolated environment for each application spread over multiple machines.  
 

@@ -44,7 +44,7 @@ For remote controlling the Tarsier I~use HTTP requests, so the Tarsier is a modu
 At the moment Tarsier starts as a HTTP server with one handler on the 
 \lstinline{/exec} URL and it accepts YAML POST requests (and because valid JSON data comply with the YAML specification, it accepts JSON POST requests as well). The structure of the body is the following:
 \pagebreak
-\begin{lstlisting}[language=yaml,caption=Command 'spin\_cpu' body structure]
+\begin{lstlisting}[language=yaml,caption=The \lstinline{heavy_load/spin_cpu} command body structure]
 command: "heavy_load/spin_cpu"
 data:
     duration: "15s"
@@ -58,7 +58,7 @@ If the command named \lstinline{heavy_load/spin_cpu} is registered and if it imp
 
 The waves are spread exponentially and it is possible that some request will come back to the same Tarsier that sent them but that does not matter because I~want to test the cluster and some random behavior is even welcome. Let’s see another example command:
  
-\begin{lstlisting}[language=yaml,caption=Command 'write' body structure]
+\begin{lstlisting}[language=yaml,caption=The \lstinline{persistent_storage/write} command body structure]
 command: "persistent_storage/write"
 data:
     amount: "100 MB"

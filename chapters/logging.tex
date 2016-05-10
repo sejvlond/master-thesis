@@ -6,7 +6,7 @@ The text files take up a lot of space, so we had to think about storing informat
 
 A~very common problem with logging into file system is rotating files. There are many approaches for this, but logrotate or another similar daemon running in the background is not the way we want to go in Docker. The Docker principle is to have only one process in one container. Sure you can run logrotate in another container in pod and send signals from one container to the other, but that’s generally not a good idea. That’s why the library for storing logs into file system also supports file rotation.
 
-So at the moment I~have solved the problem with file rotation and storing files from our applications. But how to deal with logs from any third part application? Actually the answer is very easy as well. Does the application support logging to stderr? If so, just make use of it and throw a pipeline to send the stream to stdin for another application which will simply save each line into my library. If stderr is not an option (for example nginx), does the application support syslog interface? If so, do exactly the same, only that the application which reads it will have to expose the syslog interface.
+So at the moment I~have solved the problem with file rotation and storing files from our applications. But how to deal with logs from any third part application? Actually the answer is very easy as well. Does the application support logging to stderr? If so, just make use of it and throug a pipeline to send the stream to stdin for another application which will simply save each line into my library. If stderr is not an option (for example nginx), does the application support syslog interface? If so, do exactly the same, only that the application which reads it will have to expose the syslog interface.
 
 So now I~have the files stored at the file system. How to send them to Kafka for further processing? This simple task proved to be quite tricky. There are several daemons which read files and send them somewhere. Kubernetes also have one of them.
 
@@ -17,8 +17,8 @@ Fluentd is an open source data collector for a unified logging layer. The Fluent
 \begin{figure}[htb]\centering
   \includegraphics[width=1\textwidth]{images/fluentd-architecture.png}
   \caption
-    [fluentd]
-    {fluentd \cite{fluentd}}
+    [Fluentd]
+    {Fluentd \cite{fluentd}}
   \label{fig:fluentd}
 \end{figure}
  
@@ -33,32 +33,15 @@ Logstash plugins are written in JRuby so it’s almost the same as with Fluentd.
 Heka \cite{heka} is written in Go, its plugins are written in Go and that is an advantage over Logstash or Fluentd. Heka also supports sandboxed Lua for filter scripting without the need to recompile Heka. There are plugins for Apache Kafka, Elasticsearch and many other outputs. That’s why I~started to examine Heka more closely.
 
 Heka is a heavily plugin based system. There are six different types of Heka plugins \cite{heka}:
-\begin{itemize}
-  \item	Inputs
-    \begin{itemize}
-      \item Input plugins acquire data from the outside world and inject it into the Heka pipeline. They can do this by reading files from a file system, actively making network connections to acquire data from remote servers, listening on a network socket for external actors to push data in, launching processes on the local system to gather arbitrary data, or any other mechanism.
-    \end{itemize}
-  \item	Splitters
-    \begin{itemize}
-      \item Splitter plugins receive the data that is being acquired by an input plugin and slice it up into individual records.
-    \end{itemize}
-  \item	Decoders
-    \begin{itemize}
-      \item Decoder plugins convert data that comes in through the Input plugins to Heka’s internal Message data structure. Typically decoders are responsible for any parsing, deserializing, or extracting of structure from unstructured data that needs to happen.
-    \end{itemize}    
-  \item Filters
-    \begin{itemize}
-      \item Filter plugins are Heka’s processing engines. They are configured to receive messages matching certain specific characteristics (using Heka’s Message Matcher Syntax) and are able to perform arbitrary monitoring, aggregation, and/or processing of the data. Filters are also able to generate new messages that can be reinjected into the Heka pipeline, such as summary messages containing aggregate data, notification messages in cases where suspicious anomalies are detected, or circular buffer data messages that will show up as real time graphs in Heka’s dashboard. 
-    \end{itemize}
-  \item	Encoders
-    \begin{itemize}
-      \item Encoder plugins are the inverse of Decoders. They generate arbitrary byte streams using data extracted from Heka Message structs. Encoders are embedded within Output plugins; Encoders handle the serialization, Outputs handle the details of interacting with the outside world.
-    \end{itemize}
-  \item	Outputs
-    \begin{itemize}
-      \item Output plugins send data that has been serialized by an Encoder to some external destination. They handle all of the details of interacting with the network, filesystem, or any other outside resource. They are, like Filters, configured using Heka’s Message Matcher Syntax so they will only receive and deliver messages matching certain characteristics.
-    \end{itemize}
-\end{itemize}
+
+\begin{description}
+  \item[Inputs] Input plugins acquire data from the outside world and inject it into the Heka pipeline. They can do this by reading files from a file system, actively making network connections to acquire data from remote servers, listening on a network socket for external actors to push data in, launching processes on the local system to gather arbitrary data, or any other mechanism.
+  \item[Splitters] Splitter plugins receive the data that is being acquired by an input plugin and slice it up into individual records.
+  \item[Decoders] Decoder plugins convert data that comes in through the Input plugins to Heka’s internal Message data structure. Typically decoders are responsible for any parsing, deserializing, or extracting of structure from unstructured data that needs to happen.
+  \item[Filters] Filter plugins are Heka’s processing engines. They are configured to receive messages matching certain specific characteristics (using Heka’s Message Matcher Syntax) and are able to perform arbitrary monitoring, aggregation, and/or processing of the data. Filters are also able to generate new messages that can be reinjected into the Heka pipeline, such as summary messages containing aggregate data, notification messages in cases where suspicious anomalies are detected, or circular buffer data messages that will show up as real time graphs in Heka’s dashboard. 
+  \item[Encoders] Encoder plugins are the inverse of Decoders. They generate arbitrary byte streams using data extracted from Heka Message structs. Encoders are embedded within Output plugins; Encoders handle the serialization, Outputs handle the details of interacting with the outside world.
+  \item[Outputs] Output plugins send data that has been serialized by an Encoder to some external destination. They handle all of the details of interacting with the network, filesystem, or any other outside resource. They are, like Filters, configured using Heka’s Message Matcher Syntax so they will only receive and deliver messages matching certain characteristics.
+\end{description}
 
 I~developed a custom splitter plugin and a custom decoder in Go, which are able to split and decode data from the Kafka file format. So the default Heka plugin -- Logstream Input -- reads bytes from the Kafka files, the Kafkalog splitter and the Kafkalog decoder create Heka messages which are send through the filters to a simple encoder and to the Kafka output.
 
