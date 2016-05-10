@@ -60,9 +60,9 @@ images:
 ### Python Ultimate server
 > Simple Python Tornado server for benchmarking Python and Go in Kubernetes cluster
 
-image: https://hub.docker.com/r/sejvlond/python-ultimate-server/
-
 https://github.com/sejvlond/python-ultimate-server
+
+image: https://hub.docker.com/r/sejvlond/python-ultimate-server/
 
 ### cp if not exists and sleep
 > image with binary for copy file if not exists yet and then sleep
