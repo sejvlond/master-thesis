@@ -1,6 +1,6 @@
 \chapter{Testing application}
 
-Before we can run the Kubernetes cluster at Seznam.cz and start updating all applications for it, it has to be tested so we can say it will suit our conditions. For that testing I developed an application that’ll push it to its boundaries.
+Before we can run the Kubernetes cluster at Seznam.cz and start updating all applications for it, it has to be tested so we can say it will suit our conditions. For that testing I~developed an application that’ll push it to its boundaries.
 
 The hardest task of a programmer is naming things \cite{programming-naming} but in this case my team leader came with an idea -- the Tarsier. Tarsiers are small primates with enormous eyes. Each eyeball is large as its entire brain \cite{tarsier}.  That means they will probably not invent anything new and useful, but they can watch and see everything -- which quite fits for my testing application needs. It won’t be doing anything extraordinary, it just has to test the cluster and find its weaknesses.
 
@@ -8,15 +8,15 @@ The basic requirements on the Tarsier are to heavy load the machine resources, t
 
 Of course the Tarsier will have to log its activity and probably also expose its inner statistics and metrics.
 
-When designing the Tarsier I have to think about implementing new functions in the future, so it should be modular. User need to be able to control the Tarsier’s behavior from the outside, because deploying a new image just because of a different configuration to make use of another set of its skills would be slow and inefficient.
+When designing the Tarsier I~have to think about implementing new functions in the future, so it should be modular. User need to be able to control the Tarsier’s behavior from the outside, because deploying a new image just because of a different configuration to make use of another set of its skills would be slow and inefficient.
 
 Another important thing is that one Tarsier will hardly be able to push the cluster to its boundaries, but if we employ many monkeys at once that can communicate with each other and start using the network at the same time for example, that is something that should be able to easily find the limits of the Kubernetes cluster.
 
 \section{Designing Tarsier}
 
-I designed the Tarsier as a modular application. However, as there there are no dynamic libraries in Go that could be joined together during the runtime, every application with all its dependencies is built from the source. So I created a plugin interface and a plugin registration function that will store plugin’s factory method, so Tarsier can invoke the plugin later with the desired configuration.
+I~designed the Tarsier as a modular application. However, as there there are no dynamic libraries in Go that could be joined together during the runtime, every application with all its dependencies is built from the source. So I~created a plugin interface and a plugin registration function that will store plugin’s factory method, so Tarsier can invoke the plugin later with the desired configuration.
 
-As the Tarsier will have to do many different tasks, I decided to separate each task to the Command interface and plugin that has some commands will register them.
+As the Tarsier will have to do many different tasks, I~decided to separate each task to the Command interface and plugin that has some commands will register them.
 
 \begin{lstlisting}[language=go,caption=Tarsier plugin's interfaces]
   type Plugin interface {
@@ -39,7 +39,7 @@ As the Tarsier will have to do many different tasks, I decided to separate each 
   }
 \end{lstlisting}
 
-For remote controlling the Tarsier I use HTTP requests, so the Tarsier is a modular API server, where plugins can register themselves and their commands and the Tarsier then waits for orders and executes the appropriate command when invoked. Each plugin can claim self-specific configuration and each command may demand specific data. There can also be plugins with no commands because it is possible that in the future the requirements on the Tarsier might change.
+For remote controlling the Tarsier I~use HTTP requests, so the Tarsier is a modular API server, where plugins can register themselves and their commands and the Tarsier then waits for orders and executes the appropriate command when invoked. Each plugin can claim self-specific configuration and each command may demand specific data. There can also be plugins with no commands because it is possible that in the future the requirements on the Tarsier might change.
 
 At the moment Tarsier starts as a HTTP server with one handler on the 
 \lstinline{/exec} URL and it accepts YAML POST requests (and because valid JSON data comply with the YAML specification, it accepts JSON POST requests as well). The structure of the body is the following:
@@ -56,7 +56,7 @@ wave:
 
 If the command named \lstinline{heavy_load/spin_cpu} is registered and if it implements the HasDataStruct interface, the data from the body will be unpacked to the DataStruct method returned value and the command will be executed with that structure. This will happen in a separate goroutine so the handler can also process the wave part. The wave remain is a number of how many waves are remaining to do. If it is greater than zero that means this Tarsier will have to send this request beyond and notify 10 its buddies with the same data as he gets. Obviously the wave remain value will decrease.
 
-The waves are spread exponentially and it is possible that some request will come back to the same Tarsier that sent them but that does not matter because I want to test the cluster and some random behavior is even welcome. Let’s see another example command:
+The waves are spread exponentially and it is possible that some request will come back to the same Tarsier that sent them but that does not matter because I~want to test the cluster and some random behavior is even welcome. Let’s see another example command:
  
 \begin{lstlisting}[language=yaml,caption=Command 'write' body structure]
 command: "persistent_storage/write"
@@ -79,9 +79,9 @@ This will start writing 100 MB into 10 files in parallel on each Tarsier. And al
 \end{figure}
 
 \section{Tarsiers synchronization}
-To be able to discover all the Tarsiers and to help each one of them find the others so it can send waves to them I will use Consul \cite{consul}. Consul is designed for service discovery and makes it easy to register services and to discover them later. Each Tarsier will register itself at startup and then it will periodically check its buddies. To ensure that Consul will provide only active Tarsier instances, it has multiple types of health checks. Tarsier will have to provide some service stats.
+To be able to discover all the Tarsiers and to help each one of them find the others so it can send waves to them I~will use Consul \cite{consul}. Consul is designed for service discovery and makes it easy to register services and to discover them later. Each Tarsier will register itself at startup and then it will periodically check its buddies. To ensure that Consul will provide only active Tarsier instances, it has multiple types of health checks. Tarsier will have to provide some service stats.
 
-At first I wanted to just add some special URLs for this service stuff such as \lstinline{/health_check} and \lstinline{/metrics} but then I realized that in the future those URLs may be needed and also those URLs don’t have to be accessible from the public network so I designed Tarsiers with another extra interface on its own port were private data will be provided. There will be health check and metrics handler with Prometheus statistics about how many requests have been served and what commands were executed and if they were successful. I also created a command handler where all the registered commands with their names and descriptions are provided. Because there will be plugin to simulate heavy load of memory and CPU I add a handler that shows runtime statistics from Go. There can be seen how much memory is allocated to the Go runtime, a garbage collector statistics and much more interesting data.
+At first I~wanted to just add some special URLs for this service stuff such as \lstinline{/health_check} and \lstinline{/metrics} but then I~realized that in the future those URLs may be needed and also those URLs don’t have to be accessible from the public network so I~designed Tarsiers with another extra interface on its own port were private data will be provided. There will be health check and metrics handler with Prometheus statistics about how many requests have been served and what commands were executed and if they were successful. I~also created a command handler where all the registered commands with their names and descriptions are provided. Because there will be plugin to simulate heavy load of memory and CPU I~add a handler that shows runtime statistics from Go. There can be seen how much memory is allocated to the Go runtime, a garbage collector statistics and much more interesting data.
 
 \section{Tarsier plugins and their commands}
 

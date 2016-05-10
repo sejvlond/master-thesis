@@ -7,7 +7,7 @@ So each team has a possibility to easily run automatic builds or push to a repos
 
 Testing and developing application is each team’s responsibility. But when someone wants to deploy an app to a production environment, there is a strict process. Each developer has access rights to the core machine with all the Debian \cite{debian} repositories. Developers have to upload Debian packages to the right branch (there are development, unstable, testing and read-only stable branches for each Debian distribution, divided per compartments), and run an incremental build of the branch.
 
-We are using a request tracker system. Developers have to write a request consisting of packages which have to be moved to the stable branch, steps to install and run them on each server and list of servers affected by this change. A process to rollback has to be described too.
+We are using a request tracker system. Developers have to write a request consisting of packages which have to be moved to the stable branch, steps to install and run them on each server and list of servers affected by this change. A~process to rollback has to be described too.
 
 An administrator from the team which manages the affected servers then takes the ticket and starts deploying. He can consult the process with the developer, who then tests the application to check whether the deployment was successful and then traffic is renewed (if it was stopped before) and the installation continues on the next server in the list.
 
