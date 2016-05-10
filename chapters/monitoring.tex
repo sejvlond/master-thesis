@@ -1,0 +1,11 @@
+\chapter{Monitoring}
+
+For monitoring application metrics such as count of requests, returned statuses, average request duration etc. we will use Prometheus. Prometheus is an open-source systems monitoring and alerting toolkit \cite{prometheus}. Implementing Prometheus handler to webserver is really easy because there are client libraries for Python and Go. Those metrics are then easily scraped and stored in centralized database where some other alert system may be configured.
+
+Prometheus has also prepared a Docker image so it can be run in Kubernetes cluster.
+ 
+System logs will be collected with Heka. Heka provides various input plugins like syslog, statsd or simple tcp input, while Kafka can be used as an output just like with all our others logs. This way we will have all types of logs centralized in the Kafka cluster and we can decide what to do with them next (and even change that decision later).
+ 
+Metrics and system logs may not necessarily be stored forever. They have their usage in the real-time and so they probably will not be uploaded to HDFS for some future analysis. System logs will be send to the Elasticsearch and they will be visualized in Kibana \cite{kibana}. We already have the Elasticsearch cluster in Seznam.cz and the Kibana running so it is no problem to add those logs here.
+
+Metrics will be stored in Prometheus and Grafana \cite{grafana} will be used for data visualization. Prometheus also offers alerting system so each application can have its separate rules and when something goes wrong an alert may be issued.

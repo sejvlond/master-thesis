@@ -44,7 +44,7 @@ https://github.com/sejvlond/heka
 https://github.com/sejvlond/heka-kafkalog
 
 ### Kubernetes testing
-> Support scripts for testing kubernetes
+> Support scripts for testing Kubernetes
 
 https://github.com/sejvlond/kubernetes-testing
 

@@ -1,0 +1,75 @@
+\documentclass[thesis=M,english,hidelinks]{inc/FITthesis}[2012/10/20]
+
+\usepackage[utf8]{inputenc}
+
+\usepackage{graphicx}
+\usepackage{dirtree}
+\usepackage{booktabs}
+\usepackage{listings,xcolor}
+
+\input{inc/golang.tex}
+\input{inc/yaml.tex}
+\input{inc/dockerfile.tex}
+
+\department{Department of Software Engineering}
+\title{Suitability analysis of Kubernetes for~Seznam.cz}
+\authorGN{Ondřej}
+\authorFN{Šejvl}
+\author{Ondřej Šejvl}
+\authorWithDegrees{Bc. Ondřej Šejvl}
+\supervisor{Ing. Jan Baier}
+
+\acknowledgements{Díky, díky a ještě jednou díky}
+
+\abstractEN{This thesis analyses the suitability of the Kubernetes system in the Seznam.cz’s company environment. The first part of the thesis focuses on the theory and identifies possible problems connected with a switch to this technology. The second part of the thesis describes solving those problems and running the cluster together with other applications.}
+
+\abstractCS{Tato práce analyzuje použitelnost systému Kubernetes v prostředí společnosti Seznam.cz. V první části je práce zaměřena na teoretické informace a jsou zde identifikovány možné problémy spojené s přechodem na tuto technologii. V druhé části se práce zabývá vyřešením těchto problémů a zprovozněním clusteru s dalšími podpůrnými aplikacemi.}
+
+\placeForDeclarationOfAuthenticity{Prague}
+
+\keywordsCS{Kubernetes, Seznam.cz, Docker, Heka, Kafka, Linux, virtualizace}
+\keywordsEN{Kubernetes, Seznam.cz, Docker, Heka, Kafka, Linux, virtualization}
+
+\declarationOfAuthenticityOption{5} 
+\website{https://github.com/sejvlond/master-thesis}
+
+\begin{document}
+\nocite{*}
+
+\setsecnumdepth{part}
+\input{chapters/introduction}
+
+\setsecnumdepth{all}
+
+\include{chapters/seznam-nowadays}
+\include{chapters/what-is-kubernetes}
+\include{chapters/what-is-docker}
+\include{chapters/kubernetes-basic-concepts}
+\include{chapters/kubernetes-architecture}
+\include{chapters/possible-problems-with-kubernetes-in-seznam-cz}
+\include{chapters/running-kubernetes}
+\include{chapters/docker-registry}
+\include{chapters/secrets-distribution}
+\include{chapters/logging}
+\include{chapters/security}
+\include{chapters/monitoring}
+\include{chapters/static-webpages-content}
+\include{chapters/testing-application}
+\include{chapters/testing-the-cluster}
+\include{chapters/benchmarking-python-and-go-application-servers}
+\include{chapters/benefits-for-seznam}
+
+\setsecnumdepth{part}
+\include{chapters/conclusion}
+
+\bibliographystyle{inc/iso690}
+\bibliography{bibliography}
+
+\setsecnumdepth{all}
+\appendix
+
+\include{appendix/acronyms}
+
+\include{appendix/cd-contents}
+
+\end{document}

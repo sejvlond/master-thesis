@@ -1,0 +1,13 @@
+\chapter{Kubernetes basic concepts}\label{chapter:kubernetes-basic-concepts}
+
+\section{Pod}
+In Kubernetes all containers are run in so called pods. Pod is a package of more containers (or just one) which logically belong to each other (for example application server and its proxy). It is against Docker principle to run more processes in a single container, but proxy and server have to be on same server so they can communicate via localhost and don’t overload the network. Pod is the basic building block so it is provided that containers belonging to it will be run together on the same machine. Scaling is done with whole pods.
+
+\section{Volume}
+In Docker a volume is a directory on a filesystem or in another container. Kubernetes volumes are more abstract. Kubernetes volume has a defined service life, which is the same as the service life of the pod which requested it. Pod may contain none or more volumes and each container in it has to define where the volume should be mounted.
+
+\section{Replication controller}
+Replication controller (RC) specifies the amount of pods to run at the same time. If there is fewer, it creates new ones, if there is too many, it stops some. RC keeps running exactly the same instances of pods as the maintainer wants to. 
+
+\section{Service}
+Pods in Kubernetes may start and quit as the replication controller settle. Each pod has its own IP address which can change during time so it is better not to rely on it, because pod can be moved to another machine. Which leads to a problem: what if a pod (and container in it) needs to communicate with another one? Here comes the Kubernetes service. It is an abstraction layer which defines a logical set of pods and rules for accessing them. Sometimes it is called a micro-service as well. As an example I can mention a backend service which is running in 3 instances. The frontend does not care about which one of them it will be communicating with.

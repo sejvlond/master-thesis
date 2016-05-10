@@ -1,0 +1,40 @@
+\chapter{Security}
+
+As was written before, at the moment masters and virtuals in production environment are under the administration of administrators. When a security issue is discovered, they can fix it in a matter of minutes. But on the other hand developers are forced to pack each app into a Debian package. And there are applications from many different corners, Python uses pip \cite{pip} for its packages, nodeJs \cite{nodejs} has npm \cite{npm} repositories, Go is built from source code and so on.
+
+With the advent of Kubernetes it will no longer be sustainable to check if every piece of code in production is packed in a Debian package and uploaded to custom repository, where it can be easily tracked if a newer version with security fixes is released.
+
+Because of that there has to be created a new mechanism how to check
+\begin{enumerate}
+  \item What is installed and will be running in a Docker image (system, applications, dynamic libraries, \ldots)
+  \item Using what and where was it built (gcc version, Go source codes, static libraries, \ldots)
+  \item Where is the Docker container running at the moment
+\end{enumerate}
+
+Those easily looking conditions are quite hard to satisfy in practice. Seznam.cz at the moment is using custom system called Puzzle where everyone can find on which virtuals is his component running, what packages and their versions are installed on specified virtuals and on what virtuals is installed specified package and version. Those information are delivered to system backend via script called self-checked that have to be installed on each master and is monitoring its virtuals and software installed in it.
+
+After consultation with our security admins we decided that same function is needed also with Docker cluster.
+
+The suggested solution is to create a mechanism that will sniff Docker image during pulling from development registry and pushing it to staging registry and divulge all necessary information about its content. Those information together with image digest will be sent to the Puzzle system API for future tracking. There have to be tracked not only version of debian packages but also pip and other python modules versions, npm packages, Bower \cite{bower} packages\ldots All other packages apart from ours have to be tracked as well. So we will have to build cache server for each of those repositories and run it. When developer wants to use some library (in production, developing won’t be limited) he has to add it to this cache under his name and from now he is responsible for it, that means when newer version will be found or some security issue will be discovered administrators have a privilege to demand update by this developer and rebuild all dependent images (which will be tracked by the Puzzle system).
+
+Built information are harder to get. A common scenario is to have separate image or virtual for building. When virtual is used, there is often one virtual for building more images that means simple imprint of system state will be unnecessarily comprehensive. Also when using Go, build is made from source code so there is no information about version of code.
+
+For start imprint of this development environment have to be sufficient. For Go we can standardize using glide \cite{glide} for vendor dependencies tracking so each project will have \lstinline{glide.yaml} file with dependencies and after built there will be created \lstinline{glide.lock} file with exact commit digest of vendor version control system. For this information to be responsible developer who will have to put it all in a simple text file to its production image on well-known place such as \lstinline{/www/built-info.json} for example. Those files then will be read and send to Puzzle system as well.
+
+Getting runtime information from orchestration system like Kubernetes appears to be the easiest of all conditions. Kubernetes has an API server where it is possible to get information about running containers.
+
+With all those information in a custom system we can easily track if there is a new security issue and what version fixing it and if it is backward compatible. Debian offers such mechanism and Seznam.cz is using it right now, for pip and other management systems we have to find such mechanism and implement it to our environment. This task will be a responsibility of our security administrators.
+
+A scenario when a security issue in a system package occurs (such as Heartbleed) is: find all images that uses this affected package, run script that will create new Docker image from base developer image and run installation of fixed package version. An example template of Dockerfile may look like this:
+
+\begin{lstlisting}[language=dockerfile,caption=Dockerfile snippet]
+FROM developer_image
+RUN apt-get update && apt-get install -y openssl=1.0.2-fix
+\end{lstlisting}
+
+This process will be automatic of course.
+
+However, this solution is only temporary, the future plans are to create an independent building environment under control of administrators (or integrators perhaps) where automatic builds of images will be run periodically and precisely because of information provided from developers, exact built environment can be generated for each image that guarantees smooth built process.
+
+On a meeting with our system administrators one more suggestion have been put on table. Seznam.cz have to build its own base image that will contain new packages with all system fixes. This base image will be generated automatically each hour and pushed to all Docker registries. Developers will have to use this base image or scratch image when no system is required (running some c++ binaries for example). Using any other system than that one from base image (Debian) won’t be allowed.
+

@@ -1,0 +1,11 @@
+*.swp
+*.swo
+*.bbl
+*.blg
+*.aux
+*.lof
+*.lol
+*.log
+*.out
+*.toc
+*.synctex.gz

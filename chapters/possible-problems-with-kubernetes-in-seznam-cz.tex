@@ -1,0 +1,33 @@
+\chapter{Possible problems with Kubernetes in Seznam.cz}
+
+This chapter summarizes what we have to focus on in Seznam.cz so we can build and maintain a Kubernetes cluster.
+
+\section{Docker registry}
+We have to build our own Docker registry a support for authentication so it is clear who and when pusher a certain Docker image and who is responsible for it in case of problems. Next we have to run Docker registries for developers both in testing and production environment. Images have to be mirrored from one to another registry. Production registry has to be in each data centre and it has to be a high availability service because if a whole data centre depends on a single server with Docker registry and the server fails (which it will if a whole data centre starts pulling images from it at once), it will be impossible to run new applications.
+
+\section{Secrets distribution}
+How to share passwords, certificates and other secrets which are different in development and test/production environment and which cannot be available outside of the containers that need them? Moreover, the production secrets are known only to administrators, so there has to be an easy way how to put secrets into containers without compiling them in images. Kubernetes has a technique for it and it calls it Kubernetes secrets. It has to be examined more closely and run in Seznam.cz conditions and environments.
+
+\section{Logging}
+Logging is a very huge problem. Actually most of our applications are creating debug logs, which are saved on the file system. In case of switching pods among servers there has to be a log collection and their transfer to a central storage and it has to be done so that applications don’t get overloaded.
+
+Beyond debug logs we also create so called business logs which are sensitive and cannot be lost because there are more calculations over them.
+
+And there are also third party logs such as access logs from Nginx \cite{nginx} or Apache \cite{apache} and many more. Their collection has to be done as well as gathering server side statistics (CPU load, etc.). There is a Kafka cluster at Seznam.cz for this task, which can also run support jobs to forward the logs to specific databases (Elasticsearch \cite{elasticsearch}, HDFS \cite{hdfs}, \ldots).
+
+Problems may occur with long running applications that generate large log files unless there is a logrotate running. Cron or logrotate \cite{logrotate} do not belong to Docker images, because Docker principle is to run only one application in each container.
+
+\section{Security}
+At the moment administrators are taking care of host machines and virtual machines running on them and developers only deploy applications in form of Debian packages. When a  security issue is discovered (like Heartbleed \cite{heartbleed} for example) administrator is able to maintain it and fix whatever it needs on the host machine or in specific virtual machine. When developers will deploy Docker images with operating system inside, fixing such images in case of security issue needs to be solved. Definitely we cannot rely that developers will rebuilt images in a few minutes. In case of automatically built images the whole environment for it has to be built and we also the authorization have to be solved sufficiently.
+
+\section{Monitoring}
+We need to monitor nodes in cluster and also applications and containers in Kubernetes. We are testing Prometheus \cite{prometheus} for metrics collection, while monitoring what is running where is built in Kubernetes itself.
+
+\section{Static content of websites}
+When deploying a website, there are always at least 2 versions running at the moment. The old one, where most of the traffic is going to, and the new one. The problem comes when user sends a request and the new version responds. User will receive a HTML code with links to JavaScript and CSS files and send a request for these files to the data centre. The load balancer and other services on the way may point this request to the pod with the old version of the website so none or wrong files will be downloaded and user will see the page with errors (or nothing at all).
+
+At the moment we are deploying static content of websites first and it is installed on all machines. Static content is versioned in its path, so requests for it are always successful. Than one machine is removed from the pool (and waits until all currently opened connections are done) and it is replaced with a new version. This ensures that downloading static content never fails. However, this procedure will no longer be available in Kubernetes.
+
+\begin{flushleft}
+Those are the problems which I have to find solution for.
+\end{flushleft} 
