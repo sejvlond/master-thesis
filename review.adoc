@@ -1,0 +1,63 @@
+= Review of final thesis
+:author: Tomáš Kukrál
+
+1. Difficulty and other comments on the assignment
+
+	3 - Average
+	
+	The assignment of the thesis focuses on current problems in containerized and cloud environments. This topic is suitable for the master thesis because this field is very progressive and there is not enough of analysis, especially with real implementation and benchmarks. 
+	
+2. Fulfilment of the assignment
+
+	1 - Assignment fulfiled
+	
+3. Size of the main written part
+
+	1 - Meets the criteria
+	
+	I consider the information provided in the thesis adequate for a master thesis. Theoretical part covers basic principles of Docker and Kubernetes but it could be more comprehensive to provide better understanding for readers without any prior knowledge. However there is many information available in Kubernetes documentation and I don't expect the thesis to duplicate these information.
+	
+	Analysis of possible issues in Seznam.cz's environment is sufficient and Tarsier application is well described.
+
+4. Factual and logical level of the thesis
+
+	90 
+
+	The thesis is well structured and provide good information flow. Technical overview is provided in the beginning together with possible problems. Solution for these problems is suggested in second part together with the examples.
+
+	There are a few inaccurate details mentioned, for example about pod migration. It is caused by a rapid evolution of Kubernetes and significant changes in recent versions. It would be beneficial to mention these facts together with the version.
+
+5. Formal level of the thesis
+
+	85
+
+	A few typing errors are present in the theses but majority of the text is correct. Word "virtual" is used for virtual machine which may confuse native speaker but overall level is totally adequate for master student.
+
+6. Bibliography
+
+	70
+
+	The majority of bibliography is based on the online sources and it is acceptable because this topic is new and there is not enough of good articles.
+
+
+7. Evaluation of results, publication outputs and awards
+
+	80
+
+	The most valuable contributions provided by this thesis is a deployment analysis of using new emerging technologies in Seznam.cz and Tarsier application. Procedural as well as technical issues were taken into account during this analysis. Solutions proposed in this thesis can be used as starting point for suitability analysis in different environments and companies.
+
+8. Applicability of the results
+
+	Tarsier benchmarking application was used to compare different application servers. This analysis can be used for designing an application stack based on Kubernetes. 
+
+9. Questions for the defence
+
+	* Why did you chose Kafkafeeder instead of native Docker's log drivers?
+
+10. The overall evaluation
+
+	95
+
+	This thesis provides basic theoretical overview on Docker and Kubernetes. However most valuable part is implementation testing application called Tarsier. The application is very useful for testing Kubernetes and it will probably be used by the rest of the community for stressing their deployments.
+
+	Suitability analysis for Seznam.cz is very important part of the thesis because it compare Kubernetes stack with current requirements. Possible issues are described together with proposed solutions in respect with relative unique environment at Seznam.cz.
