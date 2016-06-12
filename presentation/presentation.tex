@@ -1,0 +1,89 @@
+\documentclass[a4paper]{beamer}
+\usepackage{pgfpages}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+
+\definecolor{myred}{RGB}{163,0,0}
+\definecolor{mylightred}{RGB}{163,93,93}
+\definecolor{mygray}{RGB}{90,90,90}
+\definecolor{mygreen}{RGB}{60,128,49}
+
+\usetheme{CambridgeUS}
+
+% complementary
+%\setbeamercolor{normal text}{fg=white, bg=black}
+%\setbeamercolor{structure}{fg=yellow}
+%\setbeamercolor{section in toc}{fg=white}
+
+\setbeamercolor{titlelike}{fg=white, bg=myred}
+\setbeamercolor{frametitle}{fg=white,bg=myred}
+\setbeamercolor{framesubtitle}{fg=white}
+\setbeamercolor{palette primary}{fg=white, bg=black}
+\setbeamercolor{palette secondary}{fg=black, bg=white}
+\setbeamercolor{section in head/foot}{fg=white, bg=black}
+\setbeamercolor{block title}{bg=myred,fg=white}
+\setbeamercolor{itemize item}{fg=myred}
+\setbeamercolor{description item}{fg=myred}
+\setbeamercolor{itemize subitem}{fg=myred}
+\setbeamercolor{item projected}{bg=myred}
+\setbeamercolor{example text}{fg=white, bg=black}
+
+\setbeamertemplate{footline}{
+	\leavevmode%
+		\hbox{%
+			\begin{beamercolorbox}[wd=.233333\paperwidth,ht=2.25ex,dp=1ex,center]{author in head/foot}%
+				\usebeamerfont{author in head/foot}\insertshortauthor~(\insertshortinstitute)
+			\end{beamercolorbox}%
+			\begin{beamercolorbox}[wd=.533333\paperwidth,ht=2.25ex,dp=1ex,center]{title in head/foot}%
+				\usebeamerfont{title in head/foot}\insertshorttitle
+			\end{beamercolorbox}%
+			\begin{beamercolorbox}[wd=.233333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+				\usebeamerfont{date in head/foot}\insertshortdate{}\hspace*{2em}
+				\insertframenumber{} / \inserttotalframenumber\hspace*{2ex} 
+			\end{beamercolorbox}%
+		}%
+ 	\vskip0pt%
+}
+
+\useinnertheme{circles}
+\usepackage{subfigure}
+\usepackage[czech,english]{babel}
+\usefonttheme{professionalfonts}
+
+\usepackage{listings}
+
+\usepackage[makeroom]{cancel}
+\renewcommand{\CancelColor}{\color{myred}}
+
+\newcommand\FirstName{Bc. Ondřej}
+\newcommand\FirstNameAbbreviated{O}
+\newcommand\LastName{Šejvl}
+\newcommand\Email{sejvlond@fit.cvut.cz}
+\newcommand\DissertationTitle{Suitability analysis of Kubernetes for Seznam.cz}
+\newcommand\Department{Department of Software Engineering}
+\newcommand\Faculty{Faculty of Information Technology}
+\newcommand\University{Czech Technical University in Prague}
+\newcommand\FacultyAndUniversityAbbr{FIT CTU}
+
+\author[\FirstNameAbbreviated. \LastName]{\FirstName{} \LastName}
+\title{\DissertationTitle}
+\titlegraphic{
+	\includegraphics[height=1.5cm]{img/LogoCVUT.pdf}
+	\hspace{1cm}
+	\includegraphics[height=1cm]{img/logoSeznam.png}
+}
+\institute[\FacultyAndUniversityAbbr]{\Department\\ \Faculty\\ \University}
+\date{June 13, 2016}
+
+\setbeamercolor*{bibliography entry title}{fg=black}
+\setbeamercolor*{bibliography entry author}{fg=black}
+\setbeamercolor*{bibliography entry location}{fg=black}
+\setbeamercolor*{bibliography entry note}{fg=black}
+
+\newcommand\myheading[1]{%
+  \par\bigskip
+  {\Large\bfseries#1}\par\smallskip}
+
+\begin{document}
+	\input{content}
+\end{document}
